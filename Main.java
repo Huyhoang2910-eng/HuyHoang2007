@@ -1,161 +1,251 @@
-package huyhoangpk;
+package DinhHuyHoang_25641911;
 
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
+    static QuanLyHangThucPham ql = new QuanLyHangThucPham();
+    static DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static void main(String[] args) {
-        CDList ql = new CDList();
-        int luaChon = -1;
+        duLieuMau();
+        int chon = -1;
 
         do {
-            System.out.println("\n_______________ MENU QUẢN LÝ CD _______________");
-            System.out.println("||  1. Thêm CD (tự mở rộng mảng khi đầy)   ||");
-            System.out.println("||  2. Xóa CD theo mã                      ||");
-            System.out.println("||  3. Sửa / Cập nhật CD theo mã           ||");
-            System.out.println("||  4. Tìm kiếm theo mã                    ||");
-            System.out.println("||  5. Tìm theo tựa - TIỀN TỐ (bên trái)   ||");
-            System.out.println("||  6. Tìm theo tựa - HẬU TỐ (bên phải)    ||");
-            System.out.println("||  7. Tìm theo tựa - GẦN GIỐNG (chứa)     ||");
-            System.out.println("||  8. Hiển thị danh sách                  ||");
-            System.out.println("||  9. Thống kê                            ||");
-            System.out.println("|| 10. Sắp xếp danh sách                   ||");
-            System.out.println("||  0. Thoát                               ||");
-            System.out.println("=============================================");
-            System.out.print("Nhập lựa chọn của bạn: ");
-            
+            menu();
             try {
-                luaChon = Integer.parseInt(sc.nextLine());
+                chon = Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("❌ Vui lòng nhập vào một số nguyên hợp lệ!");
+                System.out.println("⚠ Vui long nhap so!");
                 continue;
             }
 
-            switch (luaChon) {
-                case 1:
-                    try {
-                        System.out.print("Nhập mã CD: ");
-                        int ma = Integer.parseInt(sc.nextLine());
-                        System.out.print("Nhập tựa CD: ");
-                        String tua = sc.nextLine();
-                        System.out.print("Nhập số bài hát: ");
-                        int soBai = Integer.parseInt(sc.nextLine());
-                        System.out.print("Nhập giá thành: ");
-                        double gia = Double.parseDouble(sc.nextLine());
-
-                        CD cd = new CD(ma, tua, soBai, gia);
-                        if (ql.themCD(cd)) {
-                            System.out.println("✅ Thêm CD thành công!");
-                        }
-                    } catch (Exception e) {
-                        System.out.println("❌ Lỗi: " + e.getMessage());
-                    }
-                    break;
-
-                case 2:
-                    System.out.print("Nhập mã CD cần xóa: ");
-                    int maXoa = Integer.parseInt(sc.nextLine());
-                    if (ql.xoaCD(maXoa)) {
-System.out.println("✅ Xóa CD thành công!");
-                    }
-                    break;
-
-                case 3:
-                    System.out.print("Nhập mã CD cần sửa: ");
-                    int maSua = Integer.parseInt(sc.nextLine());
-                    if (ql.timTheoMa(maSua) == null) {
-                        System.out.println("❌ Không tìm thấy CD có mã này!");
-                        break;
-                    }
-                    try {
-                        System.out.print("Nhập tựa CD mới: ");
-                        String tuaMoi = sc.nextLine();
-                        System.out.print("Nhập số bài hát mới: ");
-                        int soBaiMoi = Integer.parseInt(sc.nextLine());
-                        System.out.print("Nhập giá thành mới: ");
-                        double giaMoi = Double.parseDouble(sc.nextLine());
-
-                        if (ql.capNhatCD(maSua, tuaMoi, soBaiMoi, giaMoi)) {
-                            System.out.println("✅ Cập nhật thành công!");
-                        }
-                    } catch (Exception e) {
-                        System.out.println("❌ Lỗi: " + e.getMessage());
-                    }
-                    break;
-
-                case 4:
-                    System.out.print("Nhập mã CD cần tìm: ");
-                    int maTim = Integer.parseInt(sc.nextLine());
-                    CD kqTim = ql.timTheoMa(maTim);
-                    if (kqTim != null) {
-                        System.out.println("✅ Đã tìm thấy:");
-                        System.out.println(kqTim);
-                    } else {
-                        System.out.println("❌ Không tìm thấy CD.");
-                    }
-                    break;
-
-                case 5:
-                    System.out.print("Nhập tiền tố tựa CD cần tìm: ");
-                    String tienTo = sc.nextLine();
-                    CDList kqTT = ql.timTheoTienTo(tienTo);
-                    kqTT.hienThiDanhSach();
-                    break;
-
-                case 6:
-                    System.out.print("Nhập hậu tố tựa CD cần tìm: ");
-                    String hauTo = sc.nextLine();
-                    CDList kqHT = ql.timTheoHauTo(hauTo);
-                    kqHT.hienThiDanhSach();
-                    break;
-
-                case 7:
-                    System.out.print("Nhập từ khóa gần giống cần tìm: ");
-                    String ganGiong = sc.nextLine();
-                    CDList kqGG = ql.timGanGiong(ganGiong);
-                    kqGG.hienThiDanhSach();
-                    break;
-
-                case 8:
-                    ql.hienThiDanhSach();
-                    break;
-
-                case 9:
-                    System.out.println("\n--- THÔNG KÊ ---");
-                    System.out.println("Tổng số lượng CD: " + ql.tinhSoLuongCD());
-System.out.println("Tổng giá thành: " + ql.tinhTongGiaThanh());
-                    System.out.println("Giá trung bình: " + ql.tinhGiaTrungBinh());
-                    CD datNhat = ql.timCDDatNhat();
-                    if (datNhat != null) System.out.println("CD đắt nhất: " + datNhat);
-                    CD reNhat = ql.timCDReNhat();
-                    if (reNhat != null) System.out.println("CD rẻ nhất: " + reNhat);
-                    break;
-
-                case 10:
-                    System.out.println("1. Sắp xếp giảm dần theo giá");
-                    System.out.println("2. Sắp xếp tăng dần theo tựa");
-                    System.out.print("Chọn kiểu sắp xếp: ");
-                    int chonSapXep = Integer.parseInt(sc.nextLine());
-                    if (chonSapXep == 1) {
-                        ql.sapXepGiamDanTheoGia();
-                    } else if (chonSapXep == 2) {
-                        ql.sapXepTangDanTheoTua();
-                    } else {
-                        System.out.println("❌ Lựa chọn không hợp lệ!");
-                    }
-                    break;
-
-                case 0:
-                    System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
-                    break;
-
-                default:
-                    System.out.println("❌ Lựa chọn không hợp lệ, vui lòng chọn từ 0 đến 10!");
+            switch (chon) {
+                case 1: themThucPham();break;
+                case 2: xoaThucPham();break;
+                case 3: suaThucPham();break;
+                case 4: ql.hienThiDanhSach();break;
+                case 5: sapXepMenu();break;
+                case 6: timKiemMenu();break;
+                case 7: trichLocTheoNgay();break;
+                case 8: thongKe();break;
+                case 0:System.out.println("Tam biet!");break;
+                default:System.out.println("Lua chon khong hop le!");
             }
-        } while (luaChon != 0);
+        } while (chon != 0);
+
+        sc.close();
+    }
+    static void menu() {
+        System.out.println("\n╔════════════ QUAN LY THUC PHAM ════════════╗");
+        System.out.println("║  1. Them thuc pham                        ║");
+        System.out.println("║  2. Xoa theo id                           ║");
+        System.out.println("║  3. Sua theo id                           ║");
+        System.out.println("║  4. Hien thi danh sach                    ║");
+        System.out.println("║  5. Sap xep                               ║");
+        System.out.println("║  6. Tim kiem theo ten                     ║");
+        System.out.println("║  7. Trich loc theo khoang ngay            ║");
+        System.out.println("║  8. Thong ke                              ║");
+        System.out.println("║  0. Thoat                                 ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        System.out.print("Chon: ");
+    }
+
+    static void duLieuMau() {
+        ql.them(new HangThucPham("TP001", "Sua tuoi Vinamilk",
+                LocalDate.of(2026, 1, 15),
+                LocalDate.of(2026, 2, 15), 25000));
+
+        ql.them(new HangThucPham("TP002", "Banh quy Oreo",
+                LocalDate.of(2026, 3, 5),
+                LocalDate.of(2026, 6, 5), 15000));
+
+        ql.them(new HangThucPham("TP003", "Nuoc ngot Coca",
+                LocalDate.of(2026, 1, 20),
+                LocalDate.of(2026, 9, 20), 12000));
+
+        ql.them(new HangThucPham("TP004", "Sua chua TH True",
+                LocalDate.of(2026, 5, 10),
+                LocalDate.of(2026, 5, 25), 8000));
+
+        ql.them(new HangThucPham("TP005", "Banh mi Kinh Do",
+                LocalDate.of(2026, 8, 1),
+                LocalDate.of(2026, 8, 15), 20000));
+
+        System.out.println("\nDa nap 5 san pham mau");
+    }
+
+    static void themThucPham() {
+        try {
+            System.out.print("Ma hang: ");
+            String ma = sc.nextLine();
+
+            System.out.print("Ten hang: ");
+            String ten = sc.nextLine();
+
+            System.out.print("Ngay SX (dd/MM/yyyy): ");
+            LocalDate sx = LocalDate.parse(sc.nextLine(), df);
+
+            System.out.print("Ngay HH (dd/MM/yyyy): ");
+            LocalDate hh = LocalDate.parse(sc.nextLine(), df);
+
+            System.out.print("Gia: ");
+            float gia = Float.parseFloat(sc.nextLine());
+            
+            HangThucPham h = new HangThucPham (ma,ten,sx,hh,gia);
+            if (ql.them(h)) System.out.println("Them Thanh Cong!");
+        
+        } catch (Exception e) {
+        	System.out.println("Loi:" +e.getMessage());
+        }
+    }
+    static void xoaThucPham () {
+    	try {
+    		System.out.print("Nhap id can xoa:");
+    		int id = Integer.parseInt(sc.nextLine());
+    		if (ql.xoa(id)) System.out.println("Da xoa id" + id);
+    	}catch (NumberFormatException e) {
+    		System.out.println("Loi:" +e.getMessage());
+    	}
+    }
+    static void suaThucPham() {
+        try {
+            System.out.print("Nhap id can sua: ");
+            int id = Integer.parseInt(sc.nextLine());
+
+            System.out.print("Ten moi: ");
+            String ten = sc.nextLine();
+
+            System.out.print("Ngay SX moi (dd/MM/yyyy): ");
+            LocalDate sx = LocalDate.parse(sc.nextLine(), df);
+
+            System.out.print("Ngay NH moi (dd/MM/yyyy): ");
+            LocalDate hh = LocalDate.parse(sc.nextLine(), df);
+
+            System.out.print("Gia moi: ");
+            float gia = Float.parseFloat(sc.nextLine());
+
+            if (ql.sua(id, ten, sx, hh, gia))
+                System.out.println("Da sua id " + id);
+
+        } catch (Exception e) {
+            System.out.println("Loi: " + e.getMessage());
+        }
+    }
+
+    static void sapXepMenu() {
+        System.out.println("  a. Gia tang     | b. Gia giam");
+        System.out.println("  c. Ngay SX tang | d. Ngay SX giam");
+        System.out.println("  e. Ngay HH tang | f. Ngay HH giam");
+        System.out.print("Chon: ");
+
+        char c = sc.nextLine().toLowerCase().charAt(0);
+
+        switch (c) {
+            case 'a':ql.sapXepTheoGia(true);break;
+            case 'b':ql.sapXepTheoGia(false);break;
+            case 'c':ql.sapXepTheoNgaySanXuat(true);break;
+            case 'd':ql.sapXepTheoNgaySanXuat(false);break;
+            case 'e':ql.sapXepTheoNgayHetHan(true);break;
+            case 'f':ql.sapXepTheoNgayHetHan(false); break;
+            default:System.out.println("Khong hop le!");return;
+        }
+
+        ql.hienThiDanhSach();
+    }
+    
+    static void timKiemMenu() {
+        System.out.println("\n===== TIM KIEM =====");
+        System.out.println("a. Ten (tu bat dau) | b. Hau to (ket thuc) | c. Gan giong (chua)");
+        System.out.print("Chon: ");
+
+        String c = sc.nextLine().toLowerCase();
+        System.out.print("Nhap tu khoa: ");
+        String tk = sc.nextLine();
+
+        QuanLyHangThucPham kq;
+
+        switch (c) {
+            case "a":
+                kq = ql.timTheoTienTo(tk);
+                break;
+
+            case "b":
+                kq = ql.timTheoHauTo(tk);
+                break;
+
+            case "c":
+                kq = ql.timGanGiong(tk);
+                break;
+
+            default:
+                System.out.println("✕ Khong hop le!");
+                return;
+        }
+
+        System.out.println("Q Tim thay " + kq.laySoLuong() + " ket qua:");
+        kq.hienThiDanhSach();
+    }
+
+
+    static void trichLocTheoNgay() {
+        try {
+            System.out.println("\n===== LOC THEO NGAY =====");
+            System.out.println("a. Loc theo ngay SX | b. Loc theo ngay HH");
+            System.out.print("Chon: ");
+
+            String c = sc.nextLine().toLowerCase();
+
+            System.out.print("Tu ngay (dd/MM/yyyy): ");
+            LocalDate tu = LocalDate.parse(sc.nextLine(), df);
+
+            System.out.print("Den ngay (dd/MM/yyyy): ");
+            LocalDate den = LocalDate.parse(sc.nextLine(), df);
+
+            QuanLyHangThucPham kq;
+
+            if (c.equals("a"))
+                kq = ql.trichLocTheoNgaySanXuat(tu, den);
+            else if (c.equals("b"))
+                kq = ql.trichLocTheoNgayHetHan(tu, den);
+            else {
+                System.out.println("Khong hop le!");
+                return;
+            }
+
+            System.out.println(
+                "Q Trich loc duoc " + kq.laySoLuong() + " Ket qua:"
+            );
+
+            kq.hienThiDanhSach();
+
+        } catch (Exception e) {
+            System.out.println("Loi: " + e.getMessage());
+        }
+    }
+
+
+    static void thongKe() {
+        System.out.println("\n===== THONG KE =====");
+
+        System.out.println(
+            "Q Tong so san pham = " + ql.tinhTongSoLuong()
+        );
+
+        System.out.printf(
+            "Q Tong gia tri: %.0f VNĐ\n",
+            ql.tinhTongGiaTri()
+        );
+
+        if (ql.tinhTongSoLuong() > 0) {
+            System.out.printf(
+                "Q Gia tri trung binh: %.0f VNĐ\n",
+                ql.tinhTongGiaTri() / ql.tinhTongSoLuong()
+            );
+        }
+
+        ql.thongKeTheoThang();
     }
 }
-
- 
